@@ -28,7 +28,7 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Room> rooms;
 
 }

@@ -9,6 +9,7 @@ import com.bookApp.util.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -34,12 +35,14 @@ public class RoomServiceImpl implements RoomService {
         }
         return new BaseResponse(400, "Room id is not correct", roomId);
     }
-
+    @Transactional
     @Override
     public void deleteRoomsByIds(List<Room> rooms) {
+        List<Integer> ids = new ArrayList<>();
         for (Room room : rooms) {
-            deleteRoom(room.getId());
+            ids.add(room.getId());
         }
+        repository.deleteByIdIn(ids);
     }
 
     @Override

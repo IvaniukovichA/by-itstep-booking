@@ -18,5 +18,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     //Select * from room where id in (1,2,3,4,5,6,7)
     List<Room> findAllByIdIn(List<Integer> roomsId);
 
+    void deleteByIdIn(List<Integer> ids);
+
 
 }

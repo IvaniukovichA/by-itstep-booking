@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}/delete")
-    public BaseResponse deleteDog(@PathVariable(name = "id") Integer id) {
+    public BaseResponse deleteUser(@PathVariable(name = "id") Integer id) {
         return service.deleteUser(id);
     }
 

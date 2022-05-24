@@ -30,7 +30,7 @@ public class Room {
     private Integer ownerId;
     @Column(name = "quantity_of_current_rents", columnDefinition = "integer default 25")
     private Integer quantityOfCurrentRents;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<RoomEvent> roomEvents;
 
 }

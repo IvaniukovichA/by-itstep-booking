@@ -32,11 +32,11 @@ public class UserServiceImpl implements UserService {
         User user = repository.findById(userId).orElse(null);
         if (Objects.nonNull(user)) {
             List<Room> rooms = user.getRooms();
-            roomService.deleteRoomsByIds(rooms);
             repository.delete(user);
-            return new BaseResponse(200, "User was deleted", user);
+            roomService.deleteRoomsByIds(rooms);
+            return new BaseResponse(200, "User was deleted", null);
         } else
-            return new BaseResponse(200, "User not found", userId);
+            return new BaseResponse(200, "User not found", null);
     }
 
     @Override
