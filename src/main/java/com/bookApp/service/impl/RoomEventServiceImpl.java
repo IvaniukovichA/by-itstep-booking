@@ -1,15 +1,14 @@
 package com.bookApp.service.impl;
 
+import com.bookApp.dto.bean.RoomEventBean;
 import com.bookApp.model.RoomEvent;
 import com.bookApp.repositoty.RoomEventRepository;
 import com.bookApp.service.RoomEventService;
+import com.bookApp.util.RoomEventMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RoomEventServiceImpl implements RoomEventService {

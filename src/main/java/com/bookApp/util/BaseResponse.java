@@ -1,7 +1,5 @@
 package com.bookApp.util;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,13 +10,11 @@ import lombok.Setter;
 public class BaseResponse {
     private Integer code;
     private String message;
-    private Object object;
 
     public BaseResponse(Integer code,
-                        String message,
-                        Object object) {
+                        String message
+                        ) {
         this.code = code;
         this.message = message;
-        this.object = object;
     }
 }

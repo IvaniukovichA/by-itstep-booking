@@ -1,5 +1,11 @@
 package com.bookApp.service;
 
+import com.bookApp.dto.bean.RoomBean;
+import com.bookApp.dto.bean.RoomEventBean;
+import com.bookApp.dto.request.CreateRoomRequest;
+import com.bookApp.dto.response.BookRoomResponse;
+import com.bookApp.dto.response.CreateRoomResponse;
+import com.bookApp.dto.response.GetAllRoomResponse;
 import com.bookApp.model.Room;
 import com.bookApp.model.RoomEvent;
 import com.bookApp.util.BaseResponse;
@@ -9,16 +15,17 @@ import java.util.List;
 
 public interface RoomService {
 
-    Room createRoom(Room room);
+    CreateRoomResponse createRoom(CreateRoomRequest roomBean);
     BaseResponse deleteRoom(Integer roomId);
-    void deleteRoomsByIds(List<Room> rooms);
-    BaseResponse updateRoom(Room room);
+    void deleteRoomsByIds(List<RoomBean> roomBeans);
+    void updateRoomsByIds(List<RoomBean> roomBeans);
+    BaseResponse updateRoom(RoomBean roomBean);
 
-    List<Room> getAllRoomList();
+    GetAllRoomResponse getAllRoomList();
     Room getRoomById(Integer roomId);
     Room getRoomByUserId(Integer userId);
-    BaseResponse rentRoom(Integer userId, Integer roomId, RoomEvent roomEvent);
+    BookRoomResponse rentRoom(Integer userId, Integer roomId, RoomEvent roomEvent);
     BaseResponse unRantRoom(Integer roomId);
-    List<Room> getAllRomsByIds(List<Integer> ids);
-    List<Room> checkFreeRooms(Date startOfRent, Date endOfRent);
+    List<RoomBean> getAllRomsByIds(List<Integer> ids);
+    GetAllRoomResponse checkFreeRooms(Date startOfRent, Date endOfRent);
 }

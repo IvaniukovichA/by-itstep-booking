@@ -1,5 +1,6 @@
 package com.bookApp.service;
 
+import com.bookApp.dto.bean.RoomEventBean;
 import com.bookApp.model.RoomEvent;
 
 import java.util.Date;

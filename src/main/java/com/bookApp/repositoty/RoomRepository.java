@@ -21,4 +21,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     void deleteByIdIn(List<Integer> ids);
 
 
+
+
 }

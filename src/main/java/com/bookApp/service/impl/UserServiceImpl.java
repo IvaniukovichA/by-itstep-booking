@@ -1,11 +1,20 @@
 package com.bookApp.service.impl;
 
+import com.bookApp.dto.bean.RoomBean;
+import com.bookApp.dto.bean.UserBean;
+import com.bookApp.dto.request.CreateUserRequest;
+import com.bookApp.dto.response.CreateUserResponse;
+import com.bookApp.dto.response.DeleteUserResponse;
+import com.bookApp.dto.response.GetAllUserResponse;
+import com.bookApp.dto.response.UpdateUserResponse;
 import com.bookApp.repositoty.UserRepository;
 import com.bookApp.model.Room;
 import com.bookApp.model.User;
 import com.bookApp.service.RoomService;
 import com.bookApp.service.UserService;
 import com.bookApp.util.BaseResponse;
+import com.bookApp.util.RoomMapper;
+import com.bookApp.util.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,36 +32,50 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User createUser(User user) {
-        return repository.save(user);
+    public CreateUserResponse createUser(CreateUserRequest request) {
+        User user;
+        if(Objects.nonNull(request)) {
+            user = UserMapper.userFromUserBean(request.getCreateUserBean());
+            repository.save(user);
+            return new CreateUserResponse(200, "User was created");
+        }
+        return new CreateUserResponse(200, "Request was wrong");
     }
 
     @Override
-    public BaseResponse deleteUser(Integer userId) {
+    public DeleteUserResponse deleteUser(Integer userId) {
         User user = repository.findById(userId).orElse(null);
         if (Objects.nonNull(user)) {
             List<Room> rooms = user.getRooms();
             repository.delete(user);
-            roomService.deleteRoomsByIds(rooms);
-            return new BaseResponse(200, "User was deleted", null);
+            roomService.deleteRoomsByIds(RoomMapper.roomListToRoomBeanList(rooms));
+            return new DeleteUserResponse(200, "User was deleted");
         } else
-            return new BaseResponse(200, "User not found", null);
+            return new DeleteUserResponse(200, "User not found");
     }
 
     @Override
-    public User updateUser(User user) {
+    public UpdateUserResponse updateUser(UserBean userBean) {
+        User user = UserMapper.userFromUserBean(userBean);
         User user1 = repository.findById(user.getId()).orElse(null);
         if (Objects.nonNull(user1)) {
             user1.setName(user.getName());
             user1.setLastName(user.getLastName());
-            return repository.save(user1);
+            repository.save(user1);
+            return new UpdateUserResponse(200, "User was updating", userBean);
         }
-        return null;
+        return new UpdateUserResponse(400, "User update error", userBean);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return repository.findAll();
+    public GetAllUserResponse getAllUsers() {
+        List<User> users = repository.findAll();
+        List<UserBean> userBeans= UserMapper.userBeanListFomUserList(users);
+        return new GetAllUserResponse(
+                200,
+                "Users was exported from base successfully",
+                userBeans
+                );
     }
 
     @Override
@@ -62,19 +85,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse addRoomToUser(List<Integer> roomsId, Integer userId) {
-        List<Room> allRomsByIds = roomService.getAllRomsByIds(roomsId);
+    public UpdateUserResponse addRoomToUser(List<Integer> roomsId, Integer userId) {
+        List<RoomBean> allRomsByIds = roomService.getAllRomsByIds(roomsId);
         User userById = getUserById(userId);
         if (!allRomsByIds.isEmpty() && Objects.nonNull(userById)) {
-            userById.setRooms(allRomsByIds);
-            for (Room room : allRomsByIds) {
-                room.setOwnerId(userId);
-                roomService.updateRoom(room);
+            userById.setRooms(RoomMapper.roomBeanListToRoomList(allRomsByIds));
+            for (RoomBean roomBean : allRomsByIds) {
+                roomBean.setOwnerId(userId);
+                roomService.updateRoom(roomBean);
             }
-            User save = repository.save(userById);
-            return new BaseResponse(200, "Rooms was added", save);
+            UserBean save = UserMapper.userBeanFromUser(repository.save(userById));
+            return new UpdateUserResponse(200, "Rooms was added", save);
         }
-        return new BaseResponse(400, "Rooms or user is not found - " +
+        return new UpdateUserResponse(400, "Rooms or user is not found - " +
                 "user:" + userById +
                 "rooms:" + roomsId,
                 null);
@@ -92,13 +115,11 @@ public class UserServiceImpl implements UserService {
                 roomService.deleteRoom(roomId);
             }
 
-            User save = repository.save(userById);
-            return new BaseResponse(200, "Room was deleted", save);
+            return new BaseResponse(200, "Room was deleted");
         }
         return new BaseResponse(400, "Room or user is not found - " +
                 "user:" +
-                "rooms:" + roomId,
-                null);
+                "rooms:" + roomId);
     }
 
 

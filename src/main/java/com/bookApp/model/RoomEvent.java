@@ -25,11 +25,9 @@ public class RoomEvent {
     @Column(name = "room_id")
     private Integer roomId;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     @Column(name = "start_of_rent")
     private Date startOfRent;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     @Column(name = "end_of_rent")
     private Date endOfRent;
 }
